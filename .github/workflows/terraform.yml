@@ -92,10 +92,14 @@ jobs:
     - name: Terraform Apply
       run: terraform apply "plan"
 
+    - name: VM External IP
+      run: terraform output -raw vm_external_ip
+
     - name: Get Terraform Output
       run: |
-        echo "EXTERNAL_IP=$(terraform output -raw vm_external_ip)"
-        echo "VM_EXTERNAL_IP=$(terraform output -raw vm_external_ip)" >> $GITHUB_ENV
+        echo "EXTERNAL_IP=$(terraform-bin output -raw vm_external_ip)"
+        echo "VM_EXTERNAL_IP=$(terraform-bin output -raw vm_external_ip)" >> $GITHUB_ENV
+        echo ${{ env.VM_EXTERNAL_IP }}
 
     - name: Terraform Destroy
       run: terraform destroy -auto-approve
