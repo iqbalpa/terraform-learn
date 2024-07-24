@@ -90,10 +90,15 @@ jobs:
       # On push to "master", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
-      run: terraform apply "plan"
+      run: terraform apply "plan" -auto-approve
+
+    - name: Get Terraform Output
+      run: |
+        echo "EXTERNAL_IP=$(terraform output -raw vm_external_ip)"
+        echo "VM_EXTERNAL_IP=$(terraform output -raw vm_external_ip)" >> $GITHUB_ENV
 
     - name: Terraform Destroy
-      run: terraform destroy
+      run: terraform destroy -auto-approve
 
 
   # deploy:
@@ -117,7 +122,7 @@ jobs:
   #     - name: SSH into GCP and Run Docker Container
   #       uses: appleboy/ssh-action@master
   #       with:
-  #         host: ${{ secrets.VM_EXTERNAL_IP }}
+  #         host: ${{ vars.VM_EXTERNAL_IP }}
   #         username: ${{ secrets.GCP_USER }}
   #         key: ${{ secrets.SSH_PRIVATE_KEY }}
   #         script: |
