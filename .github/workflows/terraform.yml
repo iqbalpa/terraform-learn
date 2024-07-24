@@ -68,22 +68,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    # Authenticate via gcloud CLI
+    - name: Setup gcloud CLI
+      uses: google-github-actions/setup-gcloud@v0.3.0
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}  
+        export_default_credentials: true
+
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Configure GCP Credentials
-      run: |
-        echo "${{ secrets.GOOGLE_CREDENTIALS }}" > credentials.json
-
     - name: Create Terraform Variables
       id: vars
       run: |
         cat > terraform.tfvars <<EOF
         project="${{ secrets.GCP_PROJECT_ID }}"
-        credentials_file="credentials.json"
         region="${{ vars.GCP_REGION }}"
         zone="${{ vars.GCP_ZONE }}"
         EOF
