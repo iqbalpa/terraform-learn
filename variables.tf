@@ -10,3 +10,5 @@ variable "zone" {
 
 variable "ssh_pub_key" {}
 variable "ssh_username" {}
+
+variable "vm_instance_name" {}
