@@ -20,7 +20,7 @@ resource "google_compute_network" "vpc_network" {
 
 # Create VM Instance
 resource "google_compute_instance" "vm_instance" {
-  name         = "terraform-instance"
+  name         = var.vm_instance_name
   machine_type = "f1-micro"
   zone         = "us-central1-c"
   tags         = ["web", "dev", "terraform-learn"]
