@@ -81,10 +81,12 @@ jobs:
     - name: Create Terraform Variables
       id: vars
       run: |
-        echo "region=${{ vars.GCP_REGION }}" >> terraform.tfvars
-        echo "zone=${{ vars.GCP_ZONE }}" >> terraform.tfvars
-        echo "project=${{ secrets.GCP_PROJECT_ID }}" >> terraform.tfvars
-        echo "credentials_file=credentials.json" >> terraform.tfvars
+        cat > terraform.tfvars <<EOF
+        project="${{ secrets.GCP_PROJECT_ID }}"
+        credentials_file="credentials.json"
+        region="${{ vars.GCP_REGION }}"
+        zone="${{ vars.GCP_ZONE }}"
+        EOF
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
