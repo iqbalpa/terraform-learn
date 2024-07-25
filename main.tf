@@ -46,7 +46,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   # Startup Script to configure Nginx
-  metadata_startup_script = file(var.script_path)
+  # metadata_startup_script = file(var.script_path)
+  metadata_startup_script = data.template_file.nginx.rendered
 }
 
 # Create Firewall Rules
@@ -71,7 +72,7 @@ resource "google_compute_firewall" "allow-http" {
   source_ranges = ["0.0.0.0/0"]
 }
 resource "google_compute_firewall" "allow-3000" {
-  name = "allow-3000"
+  name    = "allow-3000"
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
@@ -84,4 +85,13 @@ resource "google_compute_firewall" "allow-3000" {
 # Reserve Static IP Address
 resource "google_compute_address" "static" {
   name = "ipv4-address"
+}
+
+# Nginx Template
+data "template_file" "nginx" {
+  template = file(var.script_path)
+
+  vars = {
+    ufw_allow_nginx = "Nginx HTTP"
+  }
 }
