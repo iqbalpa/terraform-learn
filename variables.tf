@@ -12,3 +12,7 @@ variable "ssh_pub_key" {}
 variable "ssh_username" {}
 
 variable "vm_instance_name" {}
+
+variable "script_path" {
+  type = string
+}
