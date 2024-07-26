@@ -1,14 +1,53 @@
-variable "project" {}
+variable "project" {
+  type = string
+}
+
+variable "vm_instance_name" {
+  type    = string
+  default = "terraform-instance"
+}
 
 variable "region" {
+  type    = string
   default = "us-central1"
 }
 
 variable "zone" {
+  type    = string
   default = "us-central1-c"
 }
 
-variable "ssh_pub_key" {}
-variable "ssh_username" {}
+variable "machine_type" {
+  type    = string
+  default = "f1-micro"
+}
 
-variable "vm_instance_name" {}
+variable "vpc_network_name" {
+  type    = string
+  default = "terraform-network"
+}
+
+variable "ssh_pub_key" {
+  type = string
+}
+
+variable "ssh_username" {
+  type = string
+}
+
+variable "boot_disk" {
+  type    = string
+  default = "ubuntu-os-cloud/ubuntu-2204-lts"
+}
+
+variable "domain_name" {
+  type = string
+}
+
+variable "dns_record_name" {
+  type = string
+}
+
+variable "managed_zone_name" {
+  type = string
+}

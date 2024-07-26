@@ -15,15 +15,19 @@ provider "google" {
 
 # Create VPC Network
 resource "google_compute_network" "vpc_network" {
-  name = "terraform-network"
+  name = var.vpc_network_name
 }
 
 # Create VM Instance
 resource "google_compute_instance" "vm_instance" {
   name         = var.vm_instance_name
-  machine_type = "f1-micro"
-  zone         = "us-central1-c"
-  tags         = ["terraform-learn"]
+  machine_type = var.machine_type
+  zone         = var.zone
+  tags = [
+    "allow-ssh-rule",
+    "allow-http-rule",
+    "allow-3000-rule"
+  ]
 
   # Add ssh keys
   metadata = {
@@ -33,7 +37,7 @@ resource "google_compute_instance" "vm_instance" {
   # Operating System
   boot_disk {
     initialize_params {
-      image = "cos-cloud/cos-stable"
+      image = var.boot_disk
     }
   }
 
@@ -54,7 +58,7 @@ resource "google_compute_firewall" "ssh-rule" {
     protocol = "tcp"
     ports    = ["22"]
   }
-  target_tags   = ["terraform-learn"]
+  target_tags   = ["allow-ssh-rule"]
   source_ranges = ["0.0.0.0/0"]
 }
 resource "google_compute_firewall" "allow-http" {
@@ -64,7 +68,7 @@ resource "google_compute_firewall" "allow-http" {
     protocol = "tcp"
     ports    = ["80"]
   }
-  target_tags   = ["terraform-learn"]
+  target_tags   = ["allow-http-rule"]
   source_ranges = ["0.0.0.0/0"]
 }
 resource "google_compute_firewall" "allow-3000" {
@@ -74,11 +78,22 @@ resource "google_compute_firewall" "allow-3000" {
     protocol = "tcp"
     ports    = ["3000"]
   }
-  target_tags   = ["terraform-learn"]
+  target_tags   = ["allow-3000-rule"]
   source_ranges = ["0.0.0.0/0"]
 }
 
 # Reserve Static IP Address
 resource "google_compute_address" "static" {
   name = "ipv4-address"
+}
+
+# Create DNS Record
+resource "google_dns_record_set" "terraform-learn" {
+  name = "${var.dns_record_name}.${var.domain_name}"
+  type = "A"
+  ttl  = 300
+
+  managed_zone = var.managed_zone_name
+
+  rrdatas = [google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip]
 }
