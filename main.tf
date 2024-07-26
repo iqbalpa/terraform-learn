@@ -82,3 +82,14 @@ resource "google_compute_firewall" "allow-3000" {
 resource "google_compute_address" "static" {
   name = "ipv4-address"
 }
+
+# Create DNS Record
+resource "google_dns_record_set" "terraform-learn" {
+  name = "terraform-learn.iqbalpahlevi.com."
+  type = "A"
+  ttl  = 300
+
+  managed_zone = "iqbalpahlevi-com"
+
+  rrdatas = [google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip]
+}
