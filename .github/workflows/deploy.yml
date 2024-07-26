@@ -141,7 +141,7 @@ jobs:
             VM_EXTERNAL_IP: ${{ needs.terraform.outputs.external_ip }}
         uses: appleboy/ssh-action@master
         with:
-          host: $VM_EXTERNAL_IP
+          host: "$VM_EXTERNAL_IP"
           username: ${{ secrets.GCP_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
