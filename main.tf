@@ -23,7 +23,7 @@ resource "google_compute_instance" "vm_instance" {
   name         = var.vm_instance_name
   machine_type = "f1-micro"
   zone         = "us-central1-c"
-  tags         = ["web", "dev", "terraform-learn"]
+  tags         = ["terraform-learn"]
 
   # Add ssh keys
   metadata = {
@@ -53,6 +53,26 @@ resource "google_compute_firewall" "ssh-rule" {
   allow {
     protocol = "tcp"
     ports    = ["22"]
+  }
+  target_tags   = ["terraform-learn"]
+  source_ranges = ["0.0.0.0/0"]
+}
+resource "google_compute_firewall" "allow-http" {
+  name    = "allow-http"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+  target_tags   = ["terraform-learn"]
+  source_ranges = ["0.0.0.0/0"]
+}
+resource "google_compute_firewall" "allow-3000" {
+  name    = "allow-3000"
+  network = google_compute_network.vpc_network.name
+  allow {
+    protocol = "tcp"
+    ports    = ["3000"]
   }
   target_tags   = ["terraform-learn"]
   source_ranges = ["0.0.0.0/0"]
