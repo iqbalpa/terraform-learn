@@ -49,7 +49,7 @@ resource "google_compute_instance" "vm_instance" {
     }
   }
 
-  metadata_startup_script = file(var.script_path)
+  # metadata_startup_script = file(var.script_path)
 }
 
 # Create Firewall Rules

@@ -37,7 +37,7 @@ variable "ssh_username" {
 
 variable "boot_disk" {
   type    = string
-  default = "ubuntu-os-cloud/ubuntu-2004-lts"
+  default = "cos-cloud/cos-113-lts"
 }
 
 variable "domain_name" {
