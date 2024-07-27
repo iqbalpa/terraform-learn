@@ -122,17 +122,6 @@ jobs:
           VM_EXTERNAL_IP: ${{ needs.terraform.outputs.external_ip }}
         run: echo "$VM_EXTERNAL_IP"
 
-      - name: Set up Cloud CLI
-        uses: google-github-actions/setup-gcloud@v0.3.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}
-          export_default_credentials: true
-
-      - name: Access gcloud CLI
-        run: |
-          gcloud auth configure-docker
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
