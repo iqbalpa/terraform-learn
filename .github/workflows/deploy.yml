@@ -40,25 +40,25 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       external_ip: ${{ steps.store.outputs.vm_external_ip }}
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
+    - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # Authenticate via gcloud CLI
-    - name: Setup gcloud CLI
-      uses: google-github-actions/setup-gcloud@v0.3.0
+    - name: Google Auth
+      uses: 'google-github-actions/auth@v2'
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GOOGLE_CREDENTIALS }}  
-        export_default_credentials: true
+        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Set up Cloud SDK
+      uses: 'google-github-actions/setup-gcloud@v2'
+
+    - name: Use gcloud CLI
+      run: gcloud info
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -76,20 +76,15 @@ jobs:
         managed_zone_name="${{ secrets.MANAGED_ZONE_NAME }}"
         EOF
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
 
-    # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt
 
-    # Generates an execution plan for Terraform
     - name: Terraform Plan
       run: terraform plan -out=plan
 
-      # On push to "master", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
       run: terraform apply "plan"
 
@@ -114,6 +109,7 @@ jobs:
 
 
   deploy:
+    name: 'Deploy'
     runs-on: ubuntu-latest
     needs: [docker, terraform]
     steps:
