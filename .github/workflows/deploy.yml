@@ -131,40 +131,40 @@ jobs:
             docker run -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_IMAGE_NAME }}:latest
 
 
-  cleanup:
-    name: 'Cleanup: Deployment Failed'
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: failure()
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+  # cleanup:
+  #   name: 'Cleanup: Deployment Failed'
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   if: failure()
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
 
-      - name: Google Auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+  #     - name: Google Auth
+  #       uses: 'google-github-actions/auth@v2'
+  #       with:
+  #         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
   
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/setup-gcloud@v2'
+  #     - name: Set up Cloud SDK
+  #       uses: 'google-github-actions/setup-gcloud@v2'
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
 
-      - name: Create Terraform Variables
-        id: vars
-        run: |
-          cat > terraform.tfvars <<EOF
-          project="${{ secrets.GCP_PROJECT_ID }}"
-          ssh_pub_key="${{ secrets.SSH_PUBLIC_KEY }}"
-          ssh_username="${{ secrets.GCP_USER }}"
-          domain_name="${{ secrets.DOMAIN_NAME }}"
-          dns_record_name="${{ secrets.DNS_RECORD_NAME }}"
-          managed_zone_name="${{ secrets.MANAGED_ZONE_NAME }}"
-          EOF
+  #     - name: Create Terraform Variables
+  #       id: vars
+  #       run: |
+  #         cat > terraform.tfvars <<EOF
+  #         project="${{ secrets.GCP_PROJECT_ID }}"
+  #         ssh_pub_key="${{ secrets.SSH_PUBLIC_KEY }}"
+  #         ssh_username="${{ secrets.GCP_USER }}"
+  #         domain_name="${{ secrets.DOMAIN_NAME }}"
+  #         dns_record_name="${{ secrets.DNS_RECORD_NAME }}"
+  #         managed_zone_name="${{ secrets.MANAGED_ZONE_NAME }}"
+  #         EOF
 
-      - name: Terraform Init
-        run: terraform init
+  #     - name: Terraform Init
+  #       run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+  #     - name: Terraform Destroy
+  #       run: terraform destroy -auto-approve
