@@ -37,7 +37,7 @@ variable "ssh_username" {
 
 variable "boot_disk" {
   type    = string
-  default = "ubuntu-os-cloud/ubuntu-2204-lts"
+  default = "ubuntu-os-cloud/ubuntu-2004-lts"
 }
 
 variable "domain_name" {
@@ -50,4 +50,9 @@ variable "dns_record_name" {
 
 variable "managed_zone_name" {
   type = string
+}
+
+variable "script_path" {
+  type    = string
+  default = "./script.sh"
 }

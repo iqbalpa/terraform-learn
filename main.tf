@@ -48,6 +48,8 @@ resource "google_compute_instance" "vm_instance" {
       nat_ip = google_compute_address.static.address
     }
   }
+
+  metadata_startup_script = file(var.script_path)
 }
 
 # Create Firewall Rules
