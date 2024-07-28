@@ -3,6 +3,9 @@ name: 'Automatic Deployment using Docker in GCP with Terraform Provisioning'
 on:
   push:
     branches: [ "master" ]
+    paths-ignore: 
+      - '**/*.md'
+      - '**/*.example'
   pull_request:
 
 permissions:
