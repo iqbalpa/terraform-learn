@@ -1,5 +1,7 @@
 # Terraform Learn
 
+[![Automatic Deployment using Docker in GCP with Terraform Provisioning](https://github.com/iqbalpa/terraform-learn/actions/workflows/deploy.yml/badge.svg)](https://github.com/iqbalpa/terraform-learn/actions/workflows/deploy.yml)
+
 This project is my simple project to deploy simple NestJS application using Docker into Google Cloud Engine by using Terraform for infrastructure provisioning. You can access the result [here](http://terraform-learn.iqbalpahlevi.com:3000). It supposed to display `hello world`. Also you can access it by adding number parameter in the end of the link, it will display `hello id: n`.
 
 ## Tech Stack
